@@ -1,0 +1,9 @@
+---
+common_packages:
+  - git
+  - chromium-browser
+  - curl
+  - gnupg2
+  - pass
+  - vim
+  - vlc

@@ -1,0 +1,9 @@
+---
+- name: focal configuration
+  hosts: localhost
+  connection: local
+  roles:
+    - role: common
+    # - role: bash
+    # - role: desktop
+    # - role: linuxbrew

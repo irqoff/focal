@@ -1,0 +1,117 @@
+---
+- name: Copy apt module
+  ansible.builtin.copy:
+    src: "/usr/lib/python3/dist-packages/{{ item.src }}"
+    dest: "{{ ansible_env['PYENV_VIRTUAL_ENV'] }}/lib/\
+      python3.10/site-packages/{{ item.dst }}"
+    remote_src: true
+    mode: preserve
+  loop:
+    - src: apt
+      dst: apt
+    - src: apt_inst.cpython-38-x86_64-linux-gnu.so
+      dst: apt_inst.so
+    - src: apt_pkg.cpython-38-x86_64-linux-gnu.so
+      dst: pt_pkg.so
+    - src: aptsources
+      dst: aptsources
+  tags: ["common", "python"]
+
+- name: Update system
+  ansible.builtin.apt:
+    autoclean: true
+    autoremove: true
+    cache_valid_time: 600
+    upgrade: dist
+  become: true
+  tags: ["common"]
+
+- name: Install common packages
+  ansible.builtin.apt:
+    name: "{{ common_packages }}"
+  become: true
+  tags: ["common"]
+
+- name: Copy .gitconfig
+  ansible.builtin.copy:
+    src: gitconfig
+    dest: "{{ ansible_env['HOME'] }}/.gitconfig"
+    mode: "0660"
+  tags: ["common"]
+
+- name: Copy .vimrc
+  ansible.builtin.copy:
+    src: vimrc
+    dest: "{{ ansible_env['HOME'] }}/.vimrc"
+    mode: "0660"
+  tags: ["common"]
+
+- name: Install Oh My Tmux
+  ansible.builtin.git:
+    repo: https://github.com/gpakosz/.tmux.git
+    dest: "{{ ansible_env['HOME'] }}/.tmux"
+    version: master
+  tags: ["common"]
+
+- name: Create .tmux link
+  ansible.builtin.file:
+    src: "{{ ansible_env['HOME'] }}/.tmux/.tmux.conf"
+    dest: "{{ ansible_env['HOME'] }}/.tmux.conf"
+    state: link
+  tags: ["common"]
+
+- name: Copy .tmux.conf.local
+  ansible.builtin.copy:
+    src: tmux.conf.local
+    dest: "{{ ansible_env['HOME'] }}/.tmux.conf.local"
+    mode: "0660"
+  tags: ["common"]
+
+- name: Configure sudo
+  ansible.builtin.blockinfile:
+    path: "/etc/sudoers"
+    block: >-
+      {{ ansible_env['USER'] }} ALL=(ALL:ALL)
+      NOPASSWD: /usr/bin/apt,/sbin/reboot,/sbin/shutdown
+    validate: /usr/sbin/visudo -cf %s
+  become: "yes"
+  tags: ["common"]
+
+- name: Install Docker
+  ansible.builtin.import_tasks: docker.yml
+  become: "yes"
+  tags: ["common", "docker"]
+
+- name: Install VirtualBox
+  ansible.builtin.import_tasks: virtualbox.yml
+  become: "yes"
+  tags: ["common", "virtualbox"]
+
+- name: Commit new
+  ansible.builtin.cron:
+    name: "commit new"
+    minute: "*/15"
+    job: "cd /home/{{ ansible_env['USER'] }}/docs && \
+      git add . && git commit -m 'cron commit'"
+  tags: ["common", "cron"]
+
+- name: Install Hashicorp key
+  ansible.builtin.apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+  become: true
+  tags: ["common", "hashicorp"]
+
+- name: Add Hashicorp repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] https://apt.releases.hashicorp.com \
+      {{ ansible_distribution_release }} main"
+  become: true
+  tags: ["common", "hashicorp"]
+
+- name: Install Hashicorp tools
+  ansible.builtin.apt:
+    name:
+      - vagrant
+    update_cache: "yes"
+  become: true
+  tags: ["common", "hashicorp"]
