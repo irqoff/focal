@@ -1,0 +1,38 @@
+---
+- name: Install linuxbrew
+  ansible.builtin.git:
+    repo: https://github.com/Homebrew/brew
+    dest: "{{ ansible_env['HOME'] }}/.linuxbrew/Homebrew"
+    version: master
+  tags: ["linuxbrew"]
+
+- name: Create .linuxbrew/bin
+  ansible.builtin.file:
+    dest: "{{ ansible_env['HOME'] }}/.linuxbrew/bin"
+    state: directory
+    mode: '0770'
+  tags: ["linuxbrew"]
+
+- name: Create symlink
+  ansible.builtin.file:
+    src: "{{ ansible_env['HOME'] }}/.linuxbrew/Homebrew/bin/brew"
+    dest: "{{ ansible_env['HOME'] }}/.linuxbrew/bin/brew"
+    state: link
+  tags: ["linuxbrew"]
+
+- name: Configure .bashrc
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env['HOME'] }}/.bashrc_{{ ansible_env['USER'] }}"
+    insertbefore: "^# bashrc_begin"
+    marker_begin: linuxbrew_begin
+    marker_end: linuxbrew_end
+    marker: "# {mark}"
+    block: |
+      eval $(~/.linuxbrew/bin/brew shellenv)
+      source ~/.linuxbrew/Homebrew/completions/bash/brew
+  tags: ["linuxbrew"]
+
+- name: Install brew packages
+  community.general.homebrew:
+    name: "{{ linuxbrew_packages }}"
+  tags: ["linuxbrew", "brew_package"]

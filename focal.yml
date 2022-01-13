@@ -6,4 +6,4 @@
     - role: common
     - role: bash
     # - role: desktop
-    # - role: linuxbrew
+    - role: linuxbrew

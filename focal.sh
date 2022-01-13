@@ -10,6 +10,6 @@ set +o nounset
 source ~/.bashrc
 set -o nounset
 
-cd ~/focal && ansible-playbook focal.yml -K -t brew_package
+sudo -u "$USER" bash -ci 'cd ~/focal && ansible-playbook focal.yml -K -t brew_package'
 
 set +o errexit +o nounset +o xtrace

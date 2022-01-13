@@ -1,0 +1,7 @@
+---
+linuxbrew_packages:
+  - bat
+  - dos2unix
+  - hub
+  - tmux
+  - vim
