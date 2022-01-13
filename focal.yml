@@ -4,6 +4,6 @@
   connection: local
   roles:
     - role: common
-    # - role: bash
+    - role: bash
     # - role: desktop
     # - role: linuxbrew

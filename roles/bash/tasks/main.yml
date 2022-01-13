@@ -1,0 +1,52 @@
+---
+- name: Install bash_it
+  ansible.builtin.git:
+    repo: https://github.com/Bash-it/bash-it.git
+    dest: "{{ ansible_env['HOME'] }}/.bash_it"
+    version: master
+  tags: ["bash"]
+
+- name: Configure bash_it
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env['HOME'] }}/.bashrc_{{ ansible_env['USER'] }}"
+    insertafter: EOF
+    marker_begin: bash_it_begin
+    marker_end: bash_it_end
+    marker: "# {mark}"
+    block: |
+      # If not running interactively, don't do anything
+      case $- in
+        *i*) ;;
+          *) return;;
+      esac
+      export BASH_IT="/home/{{ ansible_env['USER'] }}/.bash_it"
+      export BASH_IT_THEME='powerline'
+      unset MAILCHECK
+      export SCM_CHECK=true
+      source "$BASH_IT"/bash_it.sh
+  tags: ["bash"]
+
+- name: Copy .inputrc
+  ansible.builtin.copy:
+    src: inputrc
+    dest: "{{ ansible_env['HOME'] }}/.inputrc"
+    mode: '0660'
+  tags: ["bash"]
+
+- name: Configure .bashrc
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env['HOME'] }}/.bashrc_{{ ansible_env['USER'] }}"
+    insertbefore: "^# bash_it_begin"
+    marker_begin: bashrc_begin
+    marker_end: bashrc_end
+    marker: "# {mark}"
+    block: |
+      source {{ ansible_env['HOME'] }}/.bashrc_functions
+  tags: ["bash"]
+
+- name: Copy .bashrc_functions
+  ansible.builtin.copy:
+    src: bashrc_functions
+    dest: "{{ ansible_env['HOME'] }}/.bashrc_functions"
+    mode: '0770'
+  tags: ["bash"]

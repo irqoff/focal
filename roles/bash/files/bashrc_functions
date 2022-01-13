@@ -1,0 +1,283 @@
+# shellcheck shell=bash
+## functions
+function n()
+{
+  if [[ $# -lt 1 ]]; then
+    echo "Usage: n code"
+    return
+  fi
+  case $1 in
+    c) vim "+2" "${NEW}/Computer_science";;
+    o) vim "+2" "${NEW}/Other";;
+    s) vim "+2" "${NEW}/Science";;
+  esac
+}
+# shellcheck disable=SC2120
+function na()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: na"
+    return
+  fi
+  # shellcheck disable=SC2119
+  nn > "${HOME}/.tmp_words"
+  mv "${HOME}/.tmp_words" "${HOME}/.words"
+}
+# shellcheck disable=SC2120
+function nch()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: nch"
+    return
+  fi
+  local l
+  local file
+  for file in "${DICT}"/*; do
+    local line=""
+    local word=""
+    local m_word=""
+    local old_word=""
+    local m_old_word=""
+    local u_word=""
+    local header=""
+    local m_header=""
+    local old_header=""
+    local m_old_header=""
+    local count=0
+    while IFS= read -r line; do
+      l=$(basename "${file}")
+      if printf -- '%s' "${line}" | grep -Eiq "^\*\*"; then
+        old_word="${word}"
+        m_old_word="${m_word}"
+        word=$(printf -- '%s' "${line}"|cut -f 3 -d \*)
+        m_word=$(printf -- '%s' "${word}"|tr ' -' '01'|tr "'" '2')
+        u_word=$(printf -- '%s' "${word}"|tr '[:lower:]' '[:upper:]')
+        count=$((count+1))
+        if [[ ${count} -ge 12 ]]; then
+          echo "Too many words in ${l}: ${header}"
+        fi
+        if [[ ${m_old_word} > ${m_word} ]]; then
+          echo "Wrong words order in ${l}: ${old_word} ${word}(${m_old_word} > ${m_word})"
+        fi
+        if [[ ! ${u_word/ /_} =~ ${header} ]]; then
+          echo "Wrong word or header in ${l}: ${word} ${header}"
+        fi
+        if [[ ! ${u_word} =~ ${l} ]]; then
+          echo "Wrong word in ${l}: ${word}"
+        fi
+        if [[ "${line}" == "**${word}** - ${word}" ]]; then
+          echo "Wrong translation in ${l}: ${line}"
+        fi
+      fi
+      if printf -- '%s' "${line}" | grep -Eiq "^#"; then
+        count=0
+        old_header="${header}"
+        m_old_header="${m_header}"
+        header=$(printf -- '%s' "${line}"|cut -f 2 -d ' ')
+        m_header=$(printf -- '%s' "${header}"|tr '_-' '01')
+        if [[ ${m_old_header} > ${m_header} ]]; then
+          echo "Wrong headers order in ${l}: ${old_header} ${header}(${m_old_header} > ${m_header})"
+        fi
+        if [[ ! ${header} =~ ${l} ]]; then
+          echo "Wrong header in ${l}: ${header}"
+        fi
+        local h_level
+        h_level=$(printf -- '%s' "${line}"|cut -f 1 -d ' ')
+        h_level="${#h_level}"
+        local h_length="${#header}"
+        local file_level="${#l}"
+        if [[ $((h_length - h_level - file_level)) -ne -1 ]]; then
+          echo "Wrong header level in ${l}: ${header}"
+        fi
+      fi
+      if printf -- '%s' "${line}" | grep -Eiqv '^([#]+ |\*\*|$)'; then
+        echo "Wrong line in ${l}: ${line}"
+      fi
+    done < <(cat "${file}")
+  done
+  grep -Eir "  " "${DICT}"
+  grep -Eir " $" "${DICT}"
+  grep -Eir "^#" "${WORDS}"
+  # shellcheck disable=SC2119
+  nco
+}
+# shellcheck disable=SC2120
+function nco()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: nco"
+    return
+  fi
+  local sum=0
+  local num=0
+  local l
+  for l in "${DICT}"/*; do
+    num=$(grep -cEi "^\*\*" "${l}")
+    sum=$((sum+num))
+  done
+  echo "Number of words: ${sum}"
+}
+function ne()
+{
+  if [[ $# -lt 1 ]]; then
+    echo "Usage: ne word"
+    return
+  fi
+  local word="$1"
+  local u_word
+  u_word=$(printf -- '%s' "${word}"|tr '[:lower:]' '[:upper:]')
+  if [[ -f "${DICT}/${u_word:0:3}" ]]; then
+    if grep -Eiq "# ${u_word:0:10}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:10}" "${DICT}/${u_word:0:3}"
+      return
+    fi
+    if grep -Eiq "# ${u_word:0:9}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:9}" "${DICT}/${u_word:0:3}"
+      return
+    fi
+    if grep -Eiq "# ${u_word:0:8}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:8}" "${DICT}/${u_word:0:3}"
+      return
+    fi
+    if grep -Eiq "# ${u_word:0:7}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:7}" "${DICT}/${u_word:0:3}"
+      return
+    fi
+    if grep -Eiq "# ${u_word:0:6}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:6}" "${DICT}/${u_word:0:3}"
+      return
+    fi
+    if grep -Eiq "# ${u_word:0:5}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:5}" "${DICT}/${u_word:0:3}"
+      return
+    fi
+    if grep -Eiq "# ${u_word:0:4}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:4}" "${DICT}/${u_word:0:3}"
+      return
+    fi
+  fi
+  vim "${DICT}/${u_word:0:3}"
+}
+function ni()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: ni"
+    return
+  fi
+  vim "${HOME}/.words"
+}
+# shellcheck disable=SC2120
+function nn()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: nn"
+    return
+  fi
+  local word=""
+  # shellcheck disable=SC2020
+  < "${HOME}/.words" tr '!@#$%^&*()_=+\\|`~[{]}:;",<.>/?' ' ' | tr "'" ' ' | tr 'а-яА-Я' ' ' |\
+    tr '–' ' ' | tr $'\x80-\x8e\xd9\xe0-\xef' ' ' |\
+    tr ' ' "\n" | sort | uniq > "${HOME}/.sorted_words"
+  # shellcheck disable=SC2013
+  for word in $(cat "${HOME}/.sorted_words"); do
+    if [[ ${#word} -le 1 ]]; then
+      continue
+    fi
+    if printf -- '%s' "${word}"|grep -Eiq "^[0-9-]+$"; then
+      continue
+    fi
+    local u_word
+    u_word=$(printf -- '%s' "${word}"|tr '[:lower:]' '[:upper:]')
+    if [[ -f "${WORDS}/${u_word:0:3}" ]]; then
+      grep -Eiq "^${word}$" "${WORDS}/${u_word:0:3}" && continue
+    fi
+    if [[ -f "${DICT}/${u_word:0:3}" ]]; then
+      grep -Eiq "^\*\*${word}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      # -s
+      printf -- '%s' "${word}" | grep -Eiq "s$" && grep -Eiq "^\*\*${word%s}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "s$" && grep -Eiq "^\*\*${word%S}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      # -es
+      printf -- '%s' "${word}" | grep -Eiq "ches$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "shes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "xes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "zes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      # -ies
+      printf -- '%s' "${word}" | grep -Eiq "ies$" && grep -Eiq "^\*\*${word%ies}y\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "ies$" && grep -Eiq "^\*\*${word%IES}y\*\* - " "${DICT}/${u_word:0:3}" && continue
+    fi
+    printf -- "%s\n" "${word}"
+  done
+}
+function nnh()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: nnh"
+    return
+  fi
+  nn | head -n 20
+}
+function nt()
+{
+  if [[ $# -lt 1 ]]; then
+    echo "Usage: nt word"
+    return
+  fi
+  local word="$1"
+  local u_word
+  u_word=$(printf -- '%s' "${word}"|tr '[:lower:]' '[:upper:]')
+  if [[ -f "${DICT}/${u_word:0:3}" ]]; then
+    grep -Ei "^\*\*${word}" "${DICT}/${u_word:0:3}"
+  fi
+}
+function nu()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: nu"
+    return
+  fi
+  sudo apt update && sudo apt -y dist-upgrade && sudo apt -y autoremove && sudo apt autoclean
+  brew update && brew upgrade 
+}
+function nv()
+{
+  if [[ $# -ne 0 ]]; then
+    echo "Usage: nv"
+    return
+  fi
+  cat "${NEW}/"* > "${HOME}/.words"
+  cat "${DICT}/"* | grep -Eiv "^#" >> "${HOME}/.words"
+  < "${HOME}/.words" sed 's@-@ @g' > "${HOME}/.tmp_words"
+  cat "${HOME}/.tmp_words" >> "${HOME}/.words"
+  rm "${HOME}/.tmp_words"
+  na
+  nn
+  nch
+  < "${NEW}/*" tr ";" "\n" | sort | grep -vE '^ +$' | uniq -c | sort -n | awk '{if ($2 > 1) print}'
+}
+function nw()
+{
+  if [[ $# -lt 1 ]]; then
+    echo "Usage: nw word"
+    return
+  fi
+  local word="$1"
+  local u_word
+  u_word=$(printf -- '%s' "${word}"|tr '[:lower:]' '[:upper:]')
+  vim "${WORDS}/${u_word:0:3}"
+}
+function nf()
+{
+  if [[ $# -lt 1 ]]; then
+    echo "Usage: nf word"
+    return
+  fi
+  find "${HOME}/docs" -name "*$1*"
+}
+
+## exports
+export DICT="${HOME}/docs/English_language/Dictionary"
+export HISTIGNORE="n:n *:na:na :nch:nch :nco:nco :ne:ne *:ni:ni :nn:nn :nnh:nnh :nt:nt :nu:nu :nv:nv :nw:nw *"
+export NEW="${HOME}/docs/new"
+export WORDS="${HOME}/docs/words"
