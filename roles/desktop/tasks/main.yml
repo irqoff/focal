@@ -4,7 +4,7 @@
     key: /org/gnome/shell/favorite-apps
     value: "['org.gnome.Nautilus.desktop']"
     state: present
-  tags: ["desktop", "gnome"]
+  tags: ["gnome"]
 
 - name: Configure background
   community.general.dconf:
@@ -15,7 +15,7 @@
     - {key: primary-color, value: "'#000000'"}
     - {key: secondary-color, value: "'#000000'"}
     - {key: picture-options, value: "'none'"}
-  tags: ["desktop", "gnome"]
+  tags: ["gnome"]
 
 - name: Configure GNOME
   community.general.dconf:
@@ -23,20 +23,19 @@
     value: "{{ item.value | string }}"
     state: present
   loop: "{{ gnome_configuration }}"
-  tags: ["desktop", "gnome"]
+  tags: ["gnome"]
 
 - name: Configure bookmarks
   ansible.builtin.copy:
     src: bookmarks
     dest: "{{ ansible_env['HOME'] }}/.config/gtk-3.0/bookmarks"
     mode: '0770'
-  tags: ["desktop", "gnome"]
+  tags: ["gnome"]
 
 - name: List terminal profile
   ansible.builtin.command: dconf list /org/gnome/terminal/legacy/profiles:/
   register: terminal_profiles
   changed_when: false
-  tags: ["desktop"]
 
 - name: Configure GNOME Terminal
   community.general.dconf:
@@ -50,13 +49,11 @@
     - {key: foreground-color, value: "'rgb(255,255,255)'"}
     - {key: use-theme-colors, value: "false"}
     - {key: audible-bell, value: "false"}
-  tags: ["desktop"]
 
 - name: Check SourceCodePro-Regular.otf
   ansible.builtin.stat:
     path: "{{ ansible_env['HOME'] }}/.fonts/SourceCodePro-Regular.otf"
   register: source_code_pro
-  tags: ["desktop"]
 
 - name: Install source-code-pro
   block:
@@ -66,14 +63,12 @@
         dest: "{{ ansible_env['HOME'] }}/.source-code-pro"
         version: release
         depth: 1
-      tags: ["desktop"]
 
     - name: Create .fonts
       ansible.builtin.file:
         dest: "{{ ansible_env['HOME'] }}/.fonts"
         state: directory
         mode: '0770'
-      tags: ["desktop"]
 
     - name: Copy OTF files
       ansible.builtin.copy:
@@ -82,11 +77,9 @@
         remote_src: true
         mode: preserve
       loop: "{{ q('fileglob', ansible_env['HOME']+'/.source-code-pro/OTF/*') }}"
-      tags: ["desktop"]
 
     - name: Build font cache
       ansible.builtin.command: fc-cache -f -v
-      tags: ["desktop"]
   when: not source_code_pro.stat.exists
 
 - name: Configure GNOME Terminal fonts
@@ -98,7 +91,6 @@
   loop:
     - {key: font, value: "'Source Code Pro Medium 11'"}
     - {key: use-system-font, value: "false"}
-  tags: ["desktop"]
 
 - name: Configure hidden files
   ansible.builtin.blockinfile:
@@ -117,14 +109,14 @@
       Videos
     create: true
     mode: '0660'
-  tags: ["desktop", "hidden"]
+  tags: ["hidden"]
 
 - name: Add shortcuts
   ansible.builtin.include_tasks: add_shortcut.yml
   loop: "{{ shortcuts }}"
   loop_control:
     loop_var: key
-  tags: ["desktop", "shortcuts"]
+  tags: ["shortcuts"]
 
 - name: Create custom-keybindings key
   ansible.builtin.set_fact:
@@ -132,7 +124,7 @@
       ['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/' +
       item.key + '/'] }}"
   loop: "{{ shortcuts }}"
-  tags: ["desktop", "shortcuts"]
+  tags: ["shortcuts"]
 
 - name: Configure custom-keybindings
   ansible.builtin.dconf:
@@ -140,4 +132,4 @@
       custom-keybindings"
     value: "{{ custom_keybindings }}"
     state: present
-  tags: ["desktop", "shortcuts"]
+  tags: ["shortcuts"]
