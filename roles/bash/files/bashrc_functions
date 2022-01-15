@@ -254,7 +254,7 @@ function nv()
   na
   nn
   nch
-  < "${NEW}/"* tr ";" "\n" | sort | grep -vE '^ +$' | uniq -c | sort -n | awk '{if ($2 > 1) print}'
+  cat "${NEW}/"* | tr ";" "\n" | sort | grep -vE '^ +$' | uniq -c | sort -n | awk '{if ($1 > 1) print}'
 }
 function nw()
 {
