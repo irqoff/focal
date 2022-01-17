@@ -281,3 +281,4 @@ export DICT="${HOME}/docs/English_language/Dictionary"
 export HISTIGNORE="n:n *:na:na :nch:nch :nco:nco :ne:ne *:ni:ni :nn:nn :nnh:nnh :nt:nt :nu:nu :nv:nv :nw:nw *"
 export NEW="${HOME}/docs/new"
 export WORDS="${HOME}/docs/words"
+export MANWIDTH=100
