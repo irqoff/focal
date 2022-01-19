@@ -198,6 +198,7 @@ function nn()
       printf -- '%s' "${word}" | grep -Eiq "s$" && grep -Eiq "^\*\*${word%S}\*\* - " "${DICT}/${u_word:0:3}" && continue
       # -es
       printf -- '%s' "${word}" | grep -Eiq "ches$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "ches$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "shes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
