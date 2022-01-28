@@ -25,7 +25,7 @@ shortcuts:
   - {
     key: custom0,
     values: [
-      {name: "binding", value: "'<Primary><Alt>n'"},
+      {name: "binding", value: "'<Primary><Shift><Alt>n'"},
       {name: "command", value: "'/usr/bin/nautilus'"},
       {name: "name", value: "'nautilus'"}
     ]
@@ -33,7 +33,7 @@ shortcuts:
   - {
     key: custom1,
     values: [
-      {name: "binding", value: "'<Primary><Alt>f'"},
+      {name: "binding", value: "'<Primary><Shift><Alt>f'"},
       {name: "command", value: "'/usr/bin/firefox'"},
       {name: "name", value: "'firefox'"}
     ]
@@ -41,7 +41,7 @@ shortcuts:
   - {
     key: custom2,
     values: [
-      {name: "binding", value: "'<Primary><Alt>c'"},
+      {name: "binding", value: "'<Primary><Shift><Alt>c'"},
       {name: "command", value: "'/usr/bin/chromium-browser'"},
       {name: "name", value: "'chromium-browser'"}
     ]
@@ -49,7 +49,7 @@ shortcuts:
   - {
     key: custom3,
     values: [
-      {name: "binding", value: "'<Primary><Alt>v'"},
+      {name: "binding", value: "'<Primary><Shift><Alt>v'"},
       {name: "command", value: "'/usr/bin/VirtualBox'"},
       {name: "name", value: "'VirtualBox'"}
     ]
