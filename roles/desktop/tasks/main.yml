@@ -37,6 +37,16 @@
   register: terminal_profiles
   changed_when: false
 
+- name: Configure GNOME Terminal keybinding
+  community.general.dconf:
+    key: "/org/gnome/terminal/legacy/keybindings/\
+      {{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+  loop:
+    - {key: copy, value: "'<Primary>c'"}
+    - {key: paste, value: "'<Primary>v'"}
+
 - name: Configure GNOME Terminal
   community.general.dconf:
     key: "/org/gnome/terminal/legacy/profiles:/\
