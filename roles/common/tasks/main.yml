@@ -103,7 +103,30 @@
 - name: Install Hashicorp tools
   ansible.builtin.apt:
     name:
+      - terraform
       - vagrant
-    update_cache: "yes"
+    update_cache: true
   become: true
   tags: ["hashicorp"]
+
+- name: Add an Apt signing key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  become: true
+  tags: ["gcloud"]
+
+- name: Add the gcloud repository
+  apt_repository:
+    repo: "deb http://packages.cloud.google.com/apt cloud-sdk main"
+    state: present
+    filename: gcloud-sdk
+  become: true
+  tags: ["gcloud"]
+
+- name: Install google-cloud-sdk
+  apt:
+    name: google-cloud-sdk
+    update_cache: true
+  become: true
+  tags: ["gcloud"]
