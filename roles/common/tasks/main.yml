@@ -130,3 +130,23 @@
     update_cache: true
   become: true
   tags: ["gcloud"]
+
+- name: Add DBeaver APT key
+  ansible.builtin.apt_key:
+    url: https://dbeaver.io/debs/dbeaver.gpg.key
+  become: true
+  tags: ["dbeaver"]
+
+- name: Add DBeaver APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://dbeaver.io/debs/dbeaver-ce /"
+  become: true
+  tags: ["dbeaver"]
+
+- name: Install DBeaver
+  ansible.builtin.apt:
+    name:
+      - dbeaver-ce
+    update_cache: "yes"
+  become: true
+  tags: ["dbeaver"]
