@@ -3,5 +3,6 @@ linuxbrew_packages:
   - bat
   - dos2unix
   - hub
+  - minikube
   - tmux
   - vim
