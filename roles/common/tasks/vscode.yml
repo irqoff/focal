@@ -50,7 +50,7 @@
     mode: '0660'
 
 - name: Install Go tools (Modules mode)
-  command: go install {{ item }}
+  command: go install -v {{ item }}
   loop:
     - github.com/cweill/gotests/gotests@latest
     - github.com/fatih/gomodifytags@latest
@@ -65,4 +65,6 @@
     - golang.org/x/lint/golint@latest
     - golang.org/x/tools/gopls@latest
     - honnef.co/go/tools/cmd/staticcheck@latest
+  register: result
+  changed_when: "'downloading' in result.stderr"
   tags: ["step3"]
