@@ -127,6 +127,10 @@ function ne()
   local u_word
   u_word=$(printf -- '%s' "${word}"|tr '[:lower:]' '[:upper:]')
   if [[ -f "${DICT}/${u_word:0:3}" ]]; then
+    if grep -Eiq "# ${u_word:0:11}" "${DICT}/${u_word:0:3}"; then
+      vim "+/# ${u_word:0:11}" "${DICT}/${u_word:0:3}"
+      return
+    fi
     if grep -Eiq "# ${u_word:0:10}" "${DICT}/${u_word:0:3}"; then
       vim "+/# ${u_word:0:10}" "${DICT}/${u_word:0:3}"
       return
@@ -203,6 +207,7 @@ function nn()
       printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "xes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "xes$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "zes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
       # -ies
       printf -- '%s' "${word}" | grep -Eiq "ies$" && grep -Eiq "^\*\*${word%ies}y\*\* - " "${DICT}/${u_word:0:3}" && continue

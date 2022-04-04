@@ -7,3 +7,9 @@ common_packages:
   - pass
   - vim
   - vlc
+
+vscode_plugings:
+  - {
+    name: golang.go-nightly,
+    path: golang.go-nightly-2022.3.2318
+  }

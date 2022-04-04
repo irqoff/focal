@@ -150,3 +150,7 @@
     update_cache: "yes"
   become: true
   tags: ["dbeaver"]
+
+- name: Install vscode
+  ansible.builtin.import_tasks: vscode.yml
+  tags: ["vscode"]

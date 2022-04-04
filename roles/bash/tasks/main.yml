@@ -40,6 +40,17 @@
     block: |
       source {{ ansible_env['HOME'] }}/.bashrc_functions
 
+- name: Configure go
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env['HOME'] }}/.bashrc_{{ ansible_env['USER'] }}"
+    insertbefore: "^# bashrc_begin"
+    marker_begin: go_begin
+    marker_end: go_end
+    marker: "# {mark}"
+    block: |
+      export GOPATH={{ ansible_env['HOME'] }}/go
+      export GOROOT="$(brew --prefix golang)/libexec"
+
 - name: Copy .bashrc_functions
   ansible.builtin.copy:
     src: bashrc_functions

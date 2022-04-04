@@ -54,3 +54,11 @@ shortcuts:
       {name: "name", value: "'VirtualBox'"}
     ]
   }
+  - {
+    key: custom4,
+    values: [
+      {name: "binding", value: "'<Primary><Shift><Alt>i'"},
+      {name: "command", value: "'/usr/bin/code-insiders'"},
+      {name: "name", value: "'code-insiders'"}
+    ]
+  }
