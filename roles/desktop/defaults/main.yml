@@ -62,3 +62,11 @@ shortcuts:
       {name: "name", value: "'code-insiders'"}
     ]
   }
+  - {
+    key: custom5,
+    values: [
+      {name: "binding", value: "'<Primary><Shift><Alt>d'"},
+      {name: "command", value: "'/usr/bin/dbeaver'"},
+      {name: "name", value: "'dbeaver'"}
+    ]
+  }
