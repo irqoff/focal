@@ -13,3 +13,7 @@ vscode_plugings:
     name: golang.go-nightly,
     path: golang.go-nightly-2022.3.2318
   }
+  - {
+    name: ms-kubernetes-tools.vscode-kubernetes-tools,
+    path: ms-kubernetes-tools.vscode-kubernetes-tools-1.3.7
+  }
