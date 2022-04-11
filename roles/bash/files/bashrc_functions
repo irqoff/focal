@@ -180,7 +180,7 @@ function nn()
   local word=""
   # shellcheck disable=SC2020
   < "${HOME}/.words" tr '!@#$%^&*()_=+\\|`~[{]}:;",<.>/?' ' ' | tr "'" ' ' | tr 'а-яА-Я' ' ' |\
-    tr '–' ' ' | tr $'\x80-\x8e\xd9\xe0-\xef' ' ' |\
+    tr '–' ' ' | tr -dc 'a-zA-Z0-9 ' |\
     tr ' ' "\n" | sort | uniq > "${HOME}/.sorted_words"
   # shellcheck disable=SC2013
   for word in $(cat "${HOME}/.sorted_words"); do
@@ -204,6 +204,7 @@ function nn()
       printf -- '%s' "${word}" | grep -Eiq "ches$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "ches$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "shes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
+      printf -- '%s' "${word}" | grep -Eiq "shes$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "ses$" && grep -Eiq "^\*\*${word%ES}\*\* - " "${DICT}/${u_word:0:3}" && continue
       printf -- '%s' "${word}" | grep -Eiq "xes$" && grep -Eiq "^\*\*${word%es}\*\* - " "${DICT}/${u_word:0:3}" && continue
