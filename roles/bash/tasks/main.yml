@@ -59,11 +59,11 @@
     marker_end: k8_end
     marker: "# {mark}"
     block: |
-      if [[ -x /home/irqoff/.linuxbrew/bin/kubectl ]]; then
-        source <(/home/irqoff/.linuxbrew/bin/kubectl completion bash)
+      if [[ -x {{ ansible_env['HOME'] }}/.linuxbrew/bin/kubectl ]]; then
+        source <({{ ansible_env['HOME'] }}/.linuxbrew/bin/kubectl completion bash)
       fi
-      if [[ -x /home/irqoff/.linuxbrew/bin/minikube ]]; then
-        source <(/home/irqoff/.linuxbrew/bin/minikube completion bash)
+      if [[ -x {{ ansible_env['HOME'] }}/.linuxbrew/bin/minikube ]]; then
+        source <({{ ansible_env['HOME'] }}/.linuxbrew/bin/minikube completion bash)
       fi
 
 - name: Copy .bashrc_functions
