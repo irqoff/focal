@@ -180,7 +180,7 @@ function nn()
   local word=""
   # shellcheck disable=SC2020
   < "${HOME}/.words" tr '!@#$%^&*()_=+\\|`~[{]}:;",<.>/?' ' ' | tr "'" ' ' | tr 'а-яА-Я' ' ' |\
-    tr '–' ' ' | tr -dc 'a-zA-Z0-9 ' |\
+    tr '–' ' ' | tr -dc "a-zA-Z0-9\n\t \-" |\
     tr ' ' "\n" | sort | uniq > "${HOME}/.sorted_words"
   # shellcheck disable=SC2013
   for word in $(cat "${HOME}/.sorted_words"); do
