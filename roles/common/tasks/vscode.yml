@@ -67,4 +67,4 @@
     - honnef.co/go/tools/cmd/staticcheck@latest
   register: result
   changed_when: "'downloading' in result.stderr"
-  tags: ["step3"]
+  tags: ["brew_package"]
