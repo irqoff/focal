@@ -27,6 +27,7 @@
     repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/\
       packages.microsoft.gpg] https://packages.microsoft.com/repos/code \
       stable main"
+    filename: vscode
   become: true
 
 - name: Install vscode

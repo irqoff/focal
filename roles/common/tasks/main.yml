@@ -3,7 +3,7 @@
   ansible.builtin.copy:
     src: "/usr/lib/python3/dist-packages/{{ item.src }}"
     dest: "{{ ansible_env['PYENV_VIRTUAL_ENV'] }}/lib/\
-      python3.10/site-packages/{{ item.dst }}"
+      python3.8/site-packages/{{ item.dst }}"
     remote_src: true
     mode: preserve
   loop:
