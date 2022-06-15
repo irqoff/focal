@@ -11,7 +11,7 @@ common_packages:
 vscode_plugings:
   - {
     name: golang.go-nightly,
-    path: golang.go-nightly-2022.3.2318
+    path: golang.go-nightly-2022.4.2917
   }
   - {
     name: ms-kubernetes-tools.vscode-kubernetes-tools,
@@ -19,9 +19,13 @@ vscode_plugings:
   }
   - {
     name: ms-azuretools.vscode-docker,
-    path: ms-azuretools.vscode-docker-1.21.0
+    path: ms-azuretools.vscode-docker-1.22.0
   }
   - {
     name: redhat.ansible,
     path: redhat.ansible-0.8.1
+  }
+  - {
+    name: marp-team.marp-vscode,
+    path: marp-team.marp-vscode-1.5.2
   }
